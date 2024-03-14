@@ -13,7 +13,7 @@ const AuthTypeSelection = () => {
   );
   const [searchParams] = useSearchParams();
   const surveyId = searchParams.get('surveyId') || '';
-
+  const [buttonLoading, setButtonLoading] = useState(false);
   const info = [
     {
       title: titles.anonym,
@@ -38,6 +38,7 @@ const AuthTypeSelection = () => {
           <ContentContainer>
             {info?.map((item) => (
               <InfoCard
+                key={item.title}
                 info={item}
                 onClick={() => setSelectedSurveyAuthType(item.value)}
                 isActive={selectedSurveyAuthType == item.value}
@@ -45,7 +46,12 @@ const AuthTypeSelection = () => {
             ))}
           </ContentContainer>
           <ButtonContainer>
-            <Button disabled={typeof selectedSurveyAuthType === 'undefined'} type="submit">
+            <Button
+              onClick={() => setButtonLoading(true)}
+              loading={buttonLoading}
+              disabled={typeof selectedSurveyAuthType === 'undefined'}
+              type="submit"
+            >
               {buttonLabels.next}
             </Button>
           </ButtonContainer>

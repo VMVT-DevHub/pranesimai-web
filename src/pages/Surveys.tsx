@@ -12,6 +12,7 @@ import api from '../utils/api';
 
 const Surveys = () => {
   const [selectedSurvey, setSelectedSurvey] = useState<Survey | undefined>(undefined);
+  const [buttonLoading, setButtonLoading] = useState(false);
   const { data: surveys, isLoading } = useQuery({
     queryKey: ['surveys'],
     queryFn: () => api.getAllSurveys(),
@@ -30,6 +31,7 @@ const Surveys = () => {
           <ContentContainer>
             {surveys?.map((survey) => (
               <InfoCard
+                key={survey.id}
                 info={survey}
                 onClick={() => setSelectedSurvey(survey)}
                 isActive={selectedSurvey?.id === survey.id}
@@ -38,8 +40,11 @@ const Surveys = () => {
           </ContentContainer>
           <ButtonContainer>
             <Button
+              loading={buttonLoading}
               disabled={!selectedSurvey}
               onClick={() => {
+                setButtonLoading(true);
+
                 if (!isOptionalSurvey) return;
 
                 navigate({ pathname: slugs.auth, search: `surveyId=${selectedSurvey?.id}` });
