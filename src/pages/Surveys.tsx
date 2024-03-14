@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -6,48 +6,45 @@ import Button from '../components/buttons/Button';
 import InfoCard from '../components/cards/InfoCard';
 import FullscreenLoader from '../components/other/FullscreenLoader';
 import Default from '../layouts/Default';
-import { buttonLabels, descriptions, slugs, titles } from '../utils';
+import { Survey } from '../types';
+import { AuthTypes, buttonLabels, descriptions, slugs, titles } from '../utils';
 import api from '../utils/api';
 
 const Surveys = () => {
-  const navigate = useNavigate();
-  const [selectedSurveyId, setSelectedSurveyId] = useState(-1);
+  const [selectedSurvey, setSelectedSurvey] = useState<Survey | undefined>(undefined);
   const { data: surveys, isLoading } = useQuery({
     queryKey: ['surveys'],
     queryFn: () => api.getAllSurveys(),
   });
 
-  const startSurveyMutation = useMutation({
-    mutationFn: () => api.startSurvey({ survey: selectedSurveyId, auth: false }),
+  const navigate = useNavigate();
 
-    onSuccess: (data) => {
-      navigate({ pathname: slugs.auth, search: `pageId=${data.lastResponse}` });
-    },
-  });
-
-  const env = import.meta.env;
+  const isOptionalSurvey = selectedSurvey?.authType === AuthTypes.OPTIONAL;
 
   return (
     <Default title={titles.surveyType} description={descriptions.surveyType}>
       <Container>
         {isLoading && <FullscreenLoader />}
-        <form action={`${env.VITE_PROXY_URL}/sessions/start`} method="POST">
-          <input type="hidden" name="survey" value={selectedSurveyId} />
-          <input type="hidden" name="auth" value="false" />
+        <form action={`/api/sessions/start`} method="POST">
+          <input type="hidden" name="survey" value={selectedSurvey?.id} />
           <ContentContainer>
             {surveys?.map((survey) => (
               <InfoCard
                 info={survey}
-                onClick={() => setSelectedSurveyId(survey.id)}
-                isActive={selectedSurveyId == survey.id}
+                onClick={() => setSelectedSurvey(survey)}
+                isActive={selectedSurvey?.id === survey.id}
               />
             ))}
           </ContentContainer>
           <ButtonContainer>
             <Button
-              disabled={selectedSurveyId < 0 || startSurveyMutation.isPending}
-              loading={startSurveyMutation.isPending}
-              type="submit"
+              disabled={!selectedSurvey}
+              onClick={() => {
+                if (!isOptionalSurvey) return;
+
+                navigate({ pathname: slugs.auth, search: `surveyId=${selectedSurvey?.id}` });
+              }}
+              type={isOptionalSurvey ? 'button' : 'submit'}
             >
               {buttonLabels.next}
             </Button>

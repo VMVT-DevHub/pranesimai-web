@@ -37,6 +37,10 @@ export interface Page extends CommonFields {
   type: PageType;
   title: string;
   description: string;
+  progress: {
+    current: number;
+    total: number;
+  };
 }
 
 export interface Response extends CommonFields {

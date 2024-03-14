@@ -24,10 +24,20 @@ export const handleErrorToast = (message) => {
 };
 
 export const isEmpty = (value: any) => {
-  return (
-    value === undefined ||
-    value === null ||
-    (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (typeof value === 'string' && value.trim().length === 0)
-  );
+  if (value === undefined || value === null) {
+    return true;
+  }
+
+  if (typeof value === 'object') {
+    if (value instanceof Date) {
+      return isNaN(value.getTime());
+    }
+    return Object.keys(value).length === 0;
+  }
+
+  if (typeof value === 'string') {
+    return value.trim().length === 0;
+  }
+
+  return false;
 };
