@@ -13,15 +13,16 @@ import SelectField from '../components/fields/SelectField';
 import TextAreaField from '../components/fields/TextAreaField';
 import TextField from '../components/fields/TextField';
 import FullscreenLoader from '../components/other/FullscreenLoader';
+import { ProgressBar } from '../components/other/ProgressBar';
 import Default from '../layouts/Default';
+import { device } from '../styles';
 import { Option, Question } from '../types';
-import { ButtonColors, buttonLabels, isEmpty, QuestionType, slugs } from '../utils';
+import { ButtonColors, buttonLabels, QuestionType, slugs } from '../utils';
 import api from '../utils/api';
 
 const Survey = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const pageId = searchParams.get('pageId') || '';
   const [values, setValues] = useState<{ [key: number]: any }>({});
   const { data: currentResponse, isLoading } = useQuery({
@@ -108,7 +109,9 @@ const Survey = () => {
   const submitResponseMutation = useMutation({
     mutationFn: (params: { [key: string]: any }) => api.submitResponse(pageId, { values: params }),
     onSuccess: (data) => {
-      navigate({ search: `pageId=${data.nextResponse}` });
+      const nav = !!data?.nextResponse ? { search: `pageId=${data.nextResponse}` } : slugs.end;
+
+      return navigate(nav);
     },
   });
 
@@ -134,44 +137,37 @@ const Survey = () => {
     });
 
   return (
-    <Default title={title} description={description}>
+    <Default
+      topComponent={<ProgressBar current={23131} total={1233218} />}
+      title={title}
+      description={description}
+      maxWidth={672}
+    >
       <Container>
         {questions?.map((question) =>
           renderField(question, (value) => setValues({ ...values, [question.id]: value }), values),
         )}
 
-        {isEmpty(questions) ? (
-          <ButtonContainer>
+        <ButtonsContainer $showBackButton={showBackButton}>
+          {showBackButton && (
             <Button
-              disabled={isDisabledSubmit}
-              loading={submitResponseMutation.isPending}
-              onClick={() => navigate(slugs.surveys)}
+              disabled={submitResponseMutation.isPending}
+              variant={ButtonColors.TRANSPARENT}
+              onClick={() => {
+                navigate({ search: `pageId=${currentResponse?.previousResponse}` });
+              }}
             >
-              {buttonLabels.close}
+              {buttonLabels.back}
             </Button>
-          </ButtonContainer>
-        ) : (
-          <ButtonsContainer $showBackButton={showBackButton}>
-            {showBackButton && (
-              <Button
-                disabled={submitResponseMutation.isPending}
-                variant={ButtonColors.TRANSPARENT}
-                onClick={() => {
-                  navigate({ search: `pageId=${currentResponse?.previousResponse}` });
-                }}
-              >
-                {buttonLabels.back}
-              </Button>
-            )}
-            <Button
-              disabled={isDisabledSubmit}
-              loading={submitResponseMutation.isPending}
-              onClick={() => handleSubmit()}
-            >
-              {buttonLabels.continueFilling}
-            </Button>
-          </ButtonsContainer>
-        )}
+          )}
+          <Button
+            disabled={isDisabledSubmit}
+            loading={submitResponseMutation.isPending}
+            onClick={() => handleSubmit()}
+          >
+            {buttonLabels.continueFilling}
+          </Button>
+        </ButtonsContainer>
       </Container>
     </Default>
   );
@@ -188,7 +184,17 @@ const Container = styled.div`
 const ButtonsContainer = styled.div<{ $showBackButton: boolean }>`
   display: flex;
   margin-top: 55px;
+  flex-wrap: wrap-reverse;
+  gap: 10px;
   justify-content: ${({ $showBackButton }) => ($showBackButton ? 'space-between' : 'flex-end')};
+
+  @media ${device.mobileL} {
+    flex-wrap: wrap-reverse;
+    gap: 10px;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 const ButtonContainer = styled.div`

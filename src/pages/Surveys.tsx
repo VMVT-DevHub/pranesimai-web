@@ -18,35 +18,41 @@ const Surveys = () => {
   });
 
   const startSurveyMutation = useMutation({
-    mutationFn: () => api.startSurvey({ survey: selectedSurveyId }),
+    mutationFn: () => api.startSurvey({ survey: selectedSurveyId, auth: false }),
 
     onSuccess: (data) => {
       navigate({ pathname: slugs.auth, search: `pageId=${data.lastResponse}` });
     },
   });
 
+  const env = import.meta.env;
+
   return (
     <Default title={titles.surveyType} description={descriptions.surveyType}>
       <Container>
         {isLoading && <FullscreenLoader />}
-        <ContentContainer>
-          {surveys?.map((survey) => (
-            <InfoCard
-              info={survey}
-              onClick={() => setSelectedSurveyId(survey.id)}
-              isActive={selectedSurveyId == survey.id}
-            />
-          ))}
-        </ContentContainer>
-        <ButtonContainer>
-          <Button
-            disabled={selectedSurveyId < 0 || startSurveyMutation.isPending}
-            loading={startSurveyMutation.isPending}
-            onClick={() => startSurveyMutation.mutateAsync()}
-          >
-            {buttonLabels.next}
-          </Button>
-        </ButtonContainer>
+        <form action={`${env.VITE_PROXY_URL}/sessions/start`} method="POST">
+          <input type="hidden" name="survey" value={selectedSurveyId} />
+          <input type="hidden" name="auth" value="false" />
+          <ContentContainer>
+            {surveys?.map((survey) => (
+              <InfoCard
+                info={survey}
+                onClick={() => setSelectedSurveyId(survey.id)}
+                isActive={selectedSurveyId == survey.id}
+              />
+            ))}
+          </ContentContainer>
+          <ButtonContainer>
+            <Button
+              disabled={selectedSurveyId < 0 || startSurveyMutation.isPending}
+              loading={startSurveyMutation.isPending}
+              type="submit"
+            >
+              {buttonLabels.next}
+            </Button>
+          </ButtonContainer>
+        </form>
       </Container>
     </Default>
   );
@@ -55,7 +61,7 @@ const Surveys = () => {
 const ContentContainer = styled.div`
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 32px;
   width: 100%;
 `;

@@ -1,4 +1,4 @@
-import { PageType, QuestionType } from './utils';
+import { AuthTypes, PageType, QuestionType } from './utils';
 
 export interface CommonFields {
   id: number;
@@ -7,6 +7,7 @@ export interface CommonFields {
 
 export interface Survey extends CommonFields {
   title: string;
+  authType: AuthTypes;
   description: string;
   icon: string;
   firstPage: number;

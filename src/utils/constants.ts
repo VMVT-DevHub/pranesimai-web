@@ -34,3 +34,9 @@ export enum IconName {
   close = 'close',
   calendar = 'calendar',
 }
+
+export enum AuthTypes {
+  OPTIONAL = 'OPTIONAL',
+  NONE = 'NONE',
+  REQUIRED = 'REQUIRED',
+}

@@ -78,6 +78,8 @@ class Api {
 
   errorWrapper = async (endpoint: () => Promise<AxiosResponse<any, any>>) => {
     const res = await endpoint();
+    const redirectUrl = res.headers['location'];
+
     return res.data;
   };
 
@@ -140,13 +142,14 @@ class Api {
   };
 
   getAllSurveys = async (): Promise<Survey[]> => {
-    return this.getAll({
+    return this.get({
       resource: Resources.SURVEYS,
     });
   };
 
   startSurvey = async (params: {
     survey: number;
+    auth: boolean;
   }): Promise<{
     id: number;
     survey: number;
