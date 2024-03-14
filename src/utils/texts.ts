@@ -3,6 +3,7 @@ export const titles = {
   authenticated: 'Autentifikuosiu save per  e. valdžios vartus',
   anonym: 'Anonimiškai',
   report: 'Kokiu būdu pranešite?',
+  end: 'Dėkojame',
 };
 
 export const descriptions = {
@@ -12,6 +13,7 @@ export const descriptions = {
   anonym:
     'Jūsų pranešimas bus nagrinėjamas, tačiau Jūs nebūsite informuotas apie įvykio nagrinėjimo eigą ir priimtus sprendimus.',
   chooseSubmitType: 'Pasirinkite kaip pateiksite pranešimą',
+  end: 'Jūsų informacija sėkmingai pateikta',
 };
 
 export const buttonLabels = {

@@ -50,6 +50,7 @@ export enum Resources {
   SURVEYS = 'surveys',
   START_SURVEY = 'sessions/start',
   RESPONSES = 'responses',
+  CURRENT_SESSION = 'sessions/current',
 }
 
 export enum Populations {
@@ -78,6 +79,7 @@ class Api {
 
   errorWrapper = async (endpoint: () => Promise<AxiosResponse<any, any>>) => {
     const res = await endpoint();
+
     return res.data;
   };
 
@@ -140,13 +142,20 @@ class Api {
   };
 
   getAllSurveys = async (): Promise<Survey[]> => {
-    return this.getAll({
+    return this.get({
       resource: Resources.SURVEYS,
+    });
+  };
+
+  getCurrentSession = async (): Promise<any> => {
+    return this.get({
+      resource: Resources.CURRENT_SESSION,
     });
   };
 
   startSurvey = async (params: {
     survey: number;
+    auth: boolean;
   }): Promise<{
     id: number;
     survey: number;

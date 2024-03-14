@@ -13,7 +13,9 @@ import SelectField from '../components/fields/SelectField';
 import TextAreaField from '../components/fields/TextAreaField';
 import TextField from '../components/fields/TextField';
 import FullscreenLoader from '../components/other/FullscreenLoader';
+import { ProgressBar } from '../components/other/ProgressBar';
 import Default from '../layouts/Default';
+import { device } from '../styles';
 import { Option, Question } from '../types';
 import { ButtonColors, buttonLabels, isEmpty, QuestionType, slugs } from '../utils';
 import api from '../utils/api';
@@ -21,7 +23,6 @@ import api from '../utils/api';
 const Survey = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const pageId = searchParams.get('pageId') || '';
   const [values, setValues] = useState<{ [key: number]: any }>({});
   const { data: currentResponse, isLoading } = useQuery({
@@ -35,11 +36,30 @@ const Survey = () => {
     setValues(currentResponse?.values);
   }, [currentResponse?.values]);
 
-  const renderField = (question: Question, onChange, values) => {
-    const { condition, title, hint, options } = question;
-    const fieldValue = values?.[question.id];
+  const handleIsHiddenField = (conditionQuestions: Question, condition: Question['condition']) => {
+    if (!conditionQuestions) return false;
 
-    if (!!condition && values?.[condition.question] !== condition.value) return <></>;
+    const conditionQuestionValue = values?.[condition.question];
+
+    if (conditionQuestions.type === QuestionType.MULTISELECT) {
+      if (!conditionQuestionValue?.includes(condition.value)) return true;
+    } else {
+      if (conditionQuestionValue !== condition.value) return true;
+    }
+  };
+
+  const renderField = (
+    conditionQuestions: Question,
+    currentQuestion: Question,
+    onChange,
+    values,
+  ) => {
+    const { condition, title, hint, options } = currentQuestion;
+    const fieldValue = values?.[currentQuestion.id];
+
+    if (handleIsHiddenField(conditionQuestions, condition)) {
+      return <></>;
+    }
 
     const getCommonProps = {
       onChange,
@@ -53,7 +73,7 @@ const Survey = () => {
       options,
     };
 
-    switch (question.type) {
+    switch (currentQuestion.type) {
       case QuestionType.SELECT:
         return (
           <SelectField
@@ -108,7 +128,9 @@ const Survey = () => {
   const submitResponseMutation = useMutation({
     mutationFn: (params: { [key: string]: any }) => api.submitResponse(pageId, { values: params }),
     onSuccess: (data) => {
-      navigate({ search: `pageId=${data.nextResponse}` });
+      const nav = !!data?.nextResponse ? { search: `pageId=${data.nextResponse}` } : slugs.end;
+
+      return navigate(nav);
     },
   });
 
@@ -122,56 +144,59 @@ const Survey = () => {
   const questions = currentResponse?.questions || [];
   const showBackButton = !!currentResponse?.previousResponse;
 
-  const isDisabledSubmit =
-    submitResponseMutation.isPending ||
-    questions.some((question) => {
-      return (
-        question.required &&
-        (!question?.condition ||
-          values?.[question.condition.question] === question.condition.value) &&
-        !values[question.id]
-      );
-    });
+  const progress = currentResponse?.page?.progress;
+
+  const mappedQuestionsByIds = questions.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
+
+  const handleIsRequired = (question: Question) => {
+    const { condition, required, id } = question;
+
+    if (!isEmpty(values[id])) return false;
+
+    if (handleIsHiddenField(mappedQuestionsByIds[condition?.question], condition)) return false;
+
+    if (required) return true;
+  };
+
+  const isDisabledSubmit = submitResponseMutation.isPending || questions.some(handleIsRequired);
 
   return (
-    <Default title={title} description={description}>
+    <Default
+      topComponent={<ProgressBar current={progress.current} total={progress.total} />}
+      title={title}
+      description={description}
+      maxWidth={672}
+    >
       <Container>
         {questions?.map((question) =>
-          renderField(question, (value) => setValues({ ...values, [question.id]: value }), values),
+          renderField(
+            mappedQuestionsByIds[question?.condition?.question],
+            question,
+            (value) => setValues({ ...values, [question.id]: value }),
+            values,
+          ),
         )}
 
-        {isEmpty(questions) ? (
-          <ButtonContainer>
+        <ButtonsContainer $showBackButton={showBackButton}>
+          {showBackButton && (
             <Button
-              disabled={isDisabledSubmit}
-              loading={submitResponseMutation.isPending}
-              onClick={() => navigate(slugs.surveys)}
+              disabled={submitResponseMutation.isPending}
+              variant={ButtonColors.TRANSPARENT}
+              onClick={() => {
+                navigate({ search: `pageId=${currentResponse?.previousResponse}` });
+              }}
             >
-              {buttonLabels.close}
+              {buttonLabels.back}
             </Button>
-          </ButtonContainer>
-        ) : (
-          <ButtonsContainer $showBackButton={showBackButton}>
-            {showBackButton && (
-              <Button
-                disabled={submitResponseMutation.isPending}
-                variant={ButtonColors.TRANSPARENT}
-                onClick={() => {
-                  navigate({ search: `pageId=${currentResponse?.previousResponse}` });
-                }}
-              >
-                {buttonLabels.back}
-              </Button>
-            )}
-            <Button
-              disabled={isDisabledSubmit}
-              loading={submitResponseMutation.isPending}
-              onClick={() => handleSubmit()}
-            >
-              {buttonLabels.continueFilling}
-            </Button>
-          </ButtonsContainer>
-        )}
+          )}
+          <Button
+            disabled={isDisabledSubmit}
+            loading={submitResponseMutation.isPending}
+            onClick={() => handleSubmit()}
+          >
+            {buttonLabels.continueFilling}
+          </Button>
+        </ButtonsContainer>
       </Container>
     </Default>
   );
@@ -188,13 +213,17 @@ const Container = styled.div`
 const ButtonsContainer = styled.div<{ $showBackButton: boolean }>`
   display: flex;
   margin-top: 55px;
+  flex-wrap: wrap-reverse;
+  gap: 10px;
   justify-content: ${({ $showBackButton }) => ($showBackButton ? 'space-between' : 'flex-end')};
-`;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 55px;
+  @media ${device.mobileL} {
+    flex-wrap: wrap-reverse;
+    gap: 10px;
+    button {
+      width: 100%;
+    }
+  }
 `;
 
 export default Survey;

@@ -82,6 +82,7 @@ const Title = styled.div`
 const Description = styled.div`
   font-weight: 400;
   font-size: 1.2rem;
+  line-height: 24px;
   text-align: center;
   color: ${({ theme }) => theme.colors.label};
 `;

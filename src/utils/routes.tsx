@@ -1,11 +1,13 @@
 import AuthTypeSelection from '../pages/AuthTypeSelection';
+import End from '../pages/End';
 import Survey from '../pages/Survey';
 import Surveys from '../pages/Surveys';
 
 export const slugs = {
-  surveys: '/pranesimai',
+  surveys: '/',
   auth: '/autentifikacija',
   survey: '/pranesimas',
+  end: '/pabaiga',
 };
 
 export const routes = [
@@ -20,5 +22,9 @@ export const routes = [
   {
     slug: slugs.survey,
     component: <Survey />,
+  },
+  {
+    slug: slugs.end,
+    component: <End />,
   },
 ];

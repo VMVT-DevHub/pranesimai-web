@@ -131,7 +131,7 @@ const DateField = ({
       onBlur={handleBlur}
       $disabled={disabled}
     >
-      <div tabIndex={2} onBlur={handleBlurInput}>
+      <div tabIndex={2} onBlur={handleBlurInput} onClick={() => setOpen(!open)}>
         <TextField
           placeholder={placeHolder}
           className={className}
@@ -150,7 +150,7 @@ const DateField = ({
                   <ClearIcon $disabled={disabled!} name={IconName.close} />
                 </IconContainer>
               )}
-              <IconContainer $disabled={disabled} onClick={() => setOpen(!open)}>
+              <IconContainer $disabled={disabled}>
                 <CalendarIcon name={IconName.calendar} />
               </IconContainer>
             </>
@@ -172,7 +172,6 @@ const DateField = ({
             {...(maxDate ? { maxDate: new Date(maxDate) } : {})}
             {...(minDate ? { minDate: new Date(minDate) } : {})}
             selected={value ? new Date(value as any) : null}
-            onClickOutside={() => setOpen(false)}
             onSelect={() => setOpen(false)}
             onChange={(date: Date) => {
               if (maxDate && date > new Date(maxDate)) {

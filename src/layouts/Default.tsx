@@ -5,14 +5,19 @@ const Default = ({
   children,
   title,
   description,
+  maxWidth = 900,
+  topComponent,
 }: {
   title: string;
   description: string;
   children?: any;
+  maxWidth?: number;
+  topComponent?: JSX.Element;
 }) => {
   return (
     <Container>
-      <InnerContainer>
+      <InnerContainer maxWidth={maxWidth}>
+        {topComponent}
         <Title>{title}</Title>
         <SubTitle>{description}</SubTitle>
         {children}
@@ -33,21 +38,22 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  padding: 12px 0;
+  padding: 12px;
 `;
 
-const InnerContainer = styled.div`
+const InnerContainer = styled.div<{ maxWidth: number }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 12px;
   background-color: white;
   width: 100%;
-  @media ${device.desktop} {
-    width: 750px;
-    margin: auto;
-    padding: 56px;
+  margin: auto;
+  width: ${({ maxWidth }) => `${maxWidth}px`};
+  padding: 56px;
+
+  @media ${device.mobileM} {
+    padding: 56px 12px;
   }
 `;
 
