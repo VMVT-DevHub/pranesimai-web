@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { device } from '../../styles';
 import { FileProps } from '../../types';
-import { handleErrorToast } from '../../utils';
+import { handleErrorToast, IconName } from '../../utils';
 import { inputLabels, validationTexts } from '../../utils/texts';
 import FullscreenLoader from '../other/FullscreenLoader';
 import Icon from '../other/Icons';
@@ -115,7 +115,7 @@ const DragAndDropUploadField = ({
   };
 
   return (
-    <>
+    <Container>
       <FieldWrapper error={error} showError={showError} label={label}>
         {!disabled && (
           <UploadFileContainer
@@ -150,7 +150,7 @@ const DragAndDropUploadField = ({
               <FileSize>{bytesToMb(file.size)}</FileSize>
             </FileInnerContainer>
             <IconContainer href={file?.url} target="_blank" download={file?.name}>
-              <StyledIcon name="download" />
+              <StyledIcon name={IconName.download} />
             </IconContainer>
             {!disabled && (
               <IconContainer
@@ -158,13 +158,13 @@ const DragAndDropUploadField = ({
                   handleDelete(e, index);
                 }}
               >
-                <StyledIcon name="remove" />
+                <StyledIcon name={IconName.remove} />
               </IconContainer>
             )}
           </FileContainer>
         );
       })}
-    </>
+    </Container>
   );
 };
 
@@ -186,6 +186,12 @@ const StyledIcon = styled(Icon)`
   @media ${device.mobileL} {
     margin: 8px 0 16px 0;
   }
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 
 const Text = styled.div`
