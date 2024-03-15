@@ -150,7 +150,7 @@ const DragAndDropUploadField = ({
               <FileSize>{bytesToMb(file.size)}</FileSize>
             </FileInnerContainer>
             <IconContainer href={file?.url} target="_blank" download={file?.name}>
-              <StyledIcon name="download" />
+              <StyledIcon name={IconName.download} />
             </IconContainer>
             {!disabled && (
               <IconContainer
