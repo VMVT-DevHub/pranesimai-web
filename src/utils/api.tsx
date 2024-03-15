@@ -1,5 +1,6 @@
 import Axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Response, Survey } from '../types';
+import { isEmpty } from './functions';
 
 interface GetAll {
   resource: string;
@@ -51,6 +52,7 @@ export enum Resources {
   START_SURVEY = 'sessions/start',
   RESPONSES = 'responses',
   CURRENT_SESSION = 'sessions/current',
+  FILES_UPLOAD = 'files/upload',
 }
 
 export enum Populations {
@@ -151,6 +153,39 @@ class Api {
     return this.get({
       resource: Resources.CURRENT_SESSION,
     });
+  };
+
+  uploadFiles = async (files: File[] = []): Promise<any> => {
+    if (isEmpty(files)) return [];
+
+    const config = {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    };
+
+    try {
+      const data = await Promise.all(
+        files?.map(async (file) => {
+          const formData = new FormData();
+          formData.append('file', file);
+          const { data } = await this.AuthApiAxios.post(
+            `/${Resources.FILES_UPLOAD}`,
+            formData,
+            config,
+          );
+          return data;
+        }),
+      );
+
+      return data?.map((file) => {
+        return {
+          name: file.filename,
+          size: file.size,
+          url: file?.url,
+        };
+      });
+    } catch (e: any) {
+      return { error: e.response.data.message };
+    }
   };
 
   startSurvey = async (params: {

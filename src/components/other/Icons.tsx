@@ -1,4 +1,6 @@
 import { CgClose } from 'react-icons/cg';
+import { FaTrash } from 'react-icons/fa';
+import { FiDownload } from 'react-icons/fi';
 import { IoMdCalendar } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { IconName } from '../../utils';
@@ -16,6 +18,10 @@ const Icon = ({ name, className }: IconProps) => {
       return <MdKeyboardArrowDown className={className} />;
     case IconName.close:
       return <CgClose className={className} />;
+    case IconName.remove:
+      return <FaTrash className={className} />;
+    case IconName.download:
+      return <FiDownload className={className} />;
     case IconName.user:
       return (
         <svg

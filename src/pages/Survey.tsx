@@ -25,10 +25,21 @@ const Survey = () => {
   const navigate = useNavigate();
   const pageId = searchParams.get('pageId') || '';
   const [values, setValues] = useState<{ [key: number]: any }>({});
-  const { data: currentResponse, isLoading } = useQuery({
+  const {
+    data: currentResponse,
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ['currentResponse', pageId],
     queryFn: () => api.getCurrentResponse(pageId),
+    retry: false,
   });
+
+  useEffect(() => {
+    if (!isError) return;
+
+    navigate(slugs.surveys);
+  }, [isError]);
 
   useEffect(() => {
     if (!currentResponse?.values) return;
@@ -71,6 +82,12 @@ const Survey = () => {
       ...getCommonProps,
       getOptionLabel: (option: Option) => option.title,
       options,
+    };
+
+    const handleUpload = async (newPhotos: File[]) => {
+      const files = await api.uploadFiles(newPhotos);
+      const oldValues = fieldValue || [];
+      onChange([...oldValues, ...files]);
     };
 
     switch (currentQuestion.type) {
@@ -116,8 +133,9 @@ const Survey = () => {
         return (
           <DragAndDropUploadField
             {...geSelectProps}
-            files={[]}
-            onUpload={(files) => Promise.resolve(console.log(files))}
+            files={fieldValue}
+            onUpload={handleUpload}
+            onDelete={(files: any) => onChange(files)}
           />
         );
       default:

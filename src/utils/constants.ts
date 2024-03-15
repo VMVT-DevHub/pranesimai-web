@@ -33,6 +33,8 @@ export enum IconName {
   dropdownArrow = 'dropdownArrow',
   close = 'close',
   calendar = 'calendar',
+  remove = 'remove',
+  download = 'download',
 }
 
 export enum AuthTypes {
