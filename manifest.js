@@ -1,6 +1,9 @@
 export const manifestForPlugIn = {
   registerType: 'prompt',
   includeAssests: ['favicon.ico', 'apple-touc-icon.png', 'masked-icon.svg'],
+  workbox: {
+    navigateFallbackDenylist: [/^\/(api)\/.*/],
+  },
   manifest: {
     name: 'PRANEŠIMAI WEB',
     short_name: 'PRANEŠIMAI WEB',
