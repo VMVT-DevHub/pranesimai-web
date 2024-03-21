@@ -18,7 +18,7 @@ export enum QuestionType {
   INPUT = 'INPUT',
   TEXT = 'TEXT',
   DATE = 'DATE',
-  DATETIME = 'DATETIME',
+  DATE_TIME = 'DATETIME',
   FILES = 'FILES',
   LOCATION = 'LOCATION',
 }
@@ -30,11 +30,13 @@ export enum PageType {
 export enum IconName {
   user = 'user',
   anonym = 'anonym',
+  back = 'back',
   dropdownArrow = 'dropdownArrow',
   close = 'close',
   calendar = 'calendar',
   remove = 'remove',
   download = 'download',
+  time = 'time',
 }
 
 export enum AuthTypes {

@@ -20,6 +20,7 @@ export const buttonLabels = {
   next: 'Kitas',
   continueFilling: 'Tęsti pildymą',
   back: 'Grįžti atgal',
+  backToStart: 'Grįžti į pradžią',
   close: 'Uždaryti',
 };
 

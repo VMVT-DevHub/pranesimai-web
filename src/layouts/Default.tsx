@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import BackButton from '../components/buttons/BackButton';
 import { device } from '../styles';
 
 const Default = ({
@@ -7,22 +8,27 @@ const Default = ({
   description,
   maxWidth = 900,
   topComponent,
+  backUrl,
 }: {
   title: string;
+  backUrl?: string;
   description: string;
   children?: any;
   maxWidth?: number;
   topComponent?: JSX.Element;
 }) => {
   return (
-    <Container>
-      <InnerContainer maxWidth={maxWidth}>
-        {topComponent}
-        <Title>{title}</Title>
-        <SubTitle>{description}</SubTitle>
-        {children}
-      </InnerContainer>
-    </Container>
+    <MainContainer>
+      <Container maxWidth={maxWidth}>
+        <BackButton backUrl={backUrl} />
+        <InnerContainer>
+          {topComponent}
+          <Title>{title}</Title>
+          <SubTitle>{description}</SubTitle>
+          {children}
+        </InnerContainer>
+      </Container>
+    </MainContainer>
   );
 };
 export default Default;
@@ -31,7 +37,7 @@ const SubTitle = styled.div`
   color: ${({ theme }) => theme.colors.title};
   margin-bottom: 16px;
 `;
-const Container = styled.div`
+const MainContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,17 +47,22 @@ const Container = styled.div`
   padding: 12px;
 `;
 
-const InnerContainer = styled.div<{ maxWidth: number }>`
+const Container = styled.div<{ maxWidth: number }>`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  width: ${({ maxWidth }) => `${maxWidth}px`};
+  margin: auto;
+`;
+
+const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: white;
-  width: 100%;
-  margin: auto;
-  width: ${({ maxWidth }) => `${maxWidth}px`};
-  padding: 56px;
 
+  padding: 56px;
   @media ${device.mobileM} {
     padding: 56px 12px;
   }

@@ -12,6 +12,7 @@ import MultiSelect from '../components/fields/MultiSelect';
 import SelectField from '../components/fields/SelectField';
 import TextAreaField from '../components/fields/TextAreaField';
 import TextField from '../components/fields/TextField';
+import TimePicker from '../components/fields/TimePicker';
 import FullscreenLoader from '../components/other/FullscreenLoader';
 import { ProgressBar } from '../components/other/ProgressBar';
 import Default from '../layouts/Default';
@@ -113,10 +114,18 @@ const Survey = () => {
         return <TextField {...getCommonProps} type="email" />;
       case QuestionType.TEXT:
         return <TextAreaField {...getCommonProps} />;
+
+      case QuestionType.DATE_TIME:
+        return (
+          <TimeRow>
+            <Datepicker {...getCommonProps} />
+            <TimePicker {...getCommonProps} label="" />
+          </TimeRow>
+        );
+
       case QuestionType.DATE:
         return <Datepicker {...getCommonProps} />;
-      case QuestionType.DATETIME:
-        return <Datepicker {...getCommonProps} />;
+
       case QuestionType.CHECKBOX:
         return <Checkbox {...getCommonProps} />;
       case QuestionType.LOCATION:
@@ -138,6 +147,7 @@ const Survey = () => {
             onDelete={(files: any) => onChange(files)}
           />
         );
+
       default:
         return null;
     }
@@ -162,7 +172,7 @@ const Survey = () => {
   const questions = currentResponse?.questions || [];
   const showBackButton = !!currentResponse?.previousResponse;
 
-  const progress = currentResponse?.page?.progress;
+  const progress = currentResponse?.progress;
 
   const mappedQuestionsByIds = questions.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
 
@@ -180,6 +190,7 @@ const Survey = () => {
 
   return (
     <Default
+      backUrl={slugs.surveys}
       topComponent={<ProgressBar current={progress.current} total={progress.total} />}
       title={title}
       description={description}
@@ -241,6 +252,16 @@ const ButtonsContainer = styled.div<{ $showBackButton: boolean }>`
     button {
       width: 100%;
     }
+  }
+`;
+
+const TimeRow = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: flex-end;
+  gap: 12px;
+  @media ${device.mobileL} {
+    grid-template-columns: 1fr;
   }
 `;
 
