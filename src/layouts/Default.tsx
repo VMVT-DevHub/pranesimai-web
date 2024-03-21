@@ -11,7 +11,7 @@ const Default = ({
   backUrl,
 }: {
   title: string;
-  backUrl: string;
+  backUrl?: string;
   description: string;
   children?: any;
   maxWidth?: number;

@@ -5,7 +5,7 @@ import { ButtonColors, IconName } from '../../utils/constants';
 import Icon from '../other/Icons';
 import Button from './Button';
 
-const BackButton = ({ backUrl }: { backUrl: string }) => {
+const BackButton = ({ backUrl }: { backUrl?: string }) => {
   const navigate = useNavigate();
 
   if (!backUrl) return <></>;
