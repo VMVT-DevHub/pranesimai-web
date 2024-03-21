@@ -1,6 +1,6 @@
 import { CgClose } from 'react-icons/cg';
 import { FaTrash } from 'react-icons/fa';
-import { FiDownload } from 'react-icons/fi';
+import { FiArrowLeft, FiClock, FiDownload } from 'react-icons/fi';
 import { IoMdCalendar } from 'react-icons/io';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import { IconName } from '../../utils';
@@ -14,6 +14,10 @@ const Icon = ({ name, className }: IconProps) => {
   switch (name) {
     case IconName.calendar:
       return <IoMdCalendar className={className} />;
+    case IconName.time:
+      return <FiClock className={className} />;
+    case IconName.back:
+      return <FiArrowLeft className={className} />;
     case IconName.dropdownArrow:
       return <MdKeyboardArrowDown className={className} />;
     case IconName.close:
