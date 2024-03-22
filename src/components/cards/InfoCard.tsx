@@ -26,8 +26,7 @@ const InfoCard = ({
 export default InfoCard;
 
 const AppIcon = styled.img`
-  height: 26px;
-  color: ${({ theme }) => theme.colors.primary};
+  height: 54px;
 `;
 
 const Circle = styled.div`

@@ -1,12 +1,8 @@
 import { toast } from 'react-toastify';
-import { theme } from '../styles';
 
-export const getIconUrl = (icon: string, color = theme.colors.primary) => {
+export const getIconUrl = (icon: string) => {
   const parser = new DOMParser();
   const svgDocument = parser.parseFromString(icon, 'image/svg+xml');
-
-  const svgElement = svgDocument.querySelector('svg');
-  svgElement?.setAttribute('fill', color);
 
   const coloredIcon = new XMLSerializer().serializeToString(svgDocument);
 
