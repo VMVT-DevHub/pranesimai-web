@@ -73,14 +73,14 @@ const Container = styled.div<{ $isActive: boolean }>`
 
 const Title = styled.div`
   font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   text-align: center;
   color: ${({ theme }) => theme.colors.text.primary};
 `;
 
 const Description = styled.div`
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   line-height: 24px;
   text-align: center;
   color: ${({ theme }) => theme.colors.label};

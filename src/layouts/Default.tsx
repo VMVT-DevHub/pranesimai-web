@@ -35,7 +35,7 @@ export default Default;
 
 const SubTitle = styled.div`
   color: ${({ theme }) => theme.colors.title};
-  margin-bottom: 16px;
+  margin-bottom: 32px;
 `;
 const MainContainer = styled.div`
   display: flex;
@@ -72,6 +72,6 @@ const Title = styled.div`
   color: ${({ theme }) => theme.colors.title};
   font-size: 3.2rem;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   text-align: center;
 `;
