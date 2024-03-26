@@ -23,7 +23,7 @@ const Surveys = () => {
   const isOptionalSurvey = selectedSurvey?.authType === AuthTypes.OPTIONAL;
 
   return (
-    <Default title={titles.surveyType} description={descriptions.surveyType}>
+    <Default maxWidth={1200} title={titles.surveyType} description={descriptions.surveyType}>
       <Container>
         {isLoading && <FullscreenLoader />}
         <form action={`/api/sessions/start`} method="POST">
@@ -63,7 +63,7 @@ const Surveys = () => {
 const ContentContainer = styled.div`
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 32px;
   width: 100%;
 `;
