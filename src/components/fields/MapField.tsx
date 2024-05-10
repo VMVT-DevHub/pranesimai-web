@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FeatureCollection } from '../../types';
+import FieldWrapper from './components/FieldWrapper';
 
-const mapsHost = import.meta.env.VITE_MAPS_HOST || 'https://dev-maps.biip.lt';
+const mapsHost = 'https://maps.biip.lt';
 
 const MapField = ({
   value,
   onChange,
+  label,
 }: {
   value: FeatureCollection;
   onChange: (value: FeatureCollection) => void;
+  label: string;
 }) => {
   const iframeRef = useRef<any>(null);
 
@@ -37,15 +40,17 @@ const MapField = ({
   }, [handleLoadMap]);
 
   return (
-    <Iframe
-      src={`${mapsHost}/edit?types[]=point&buffer=xl`}
-      ref={iframeRef}
-      width={'100%'}
-      allowFullScreen={true}
-      onLoad={handleLoadMap}
-      aria-hidden="false"
-      tabIndex={1}
-    />
+    <FieldWrapper label={label}>
+      <Iframe
+        src={`${mapsHost}/edit?types[]=point`}
+        ref={iframeRef}
+        width={'100%'}
+        allowFullScreen={true}
+        onLoad={handleLoadMap}
+        aria-hidden="false"
+        tabIndex={1}
+      />
+    </FieldWrapper>
   );
 };
 
