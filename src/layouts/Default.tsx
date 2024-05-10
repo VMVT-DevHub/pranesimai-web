@@ -45,6 +45,7 @@ const MainContainer = styled.div`
   height: 100%;
   overflow-y: auto;
   padding: 12px;
+  position: fixed;
 `;
 
 const Container = styled.div<{ maxWidth: number }>`

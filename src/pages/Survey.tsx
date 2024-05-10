@@ -66,7 +66,7 @@ const Survey = () => {
     onChange,
     values,
   ) => {
-    const { condition, title, hint, options } = currentQuestion;
+    const { condition, title, hint, options, required } = currentQuestion;
     const fieldValue = values?.[currentQuestion.id];
 
     if (handleIsHiddenField(conditionQuestions, condition)) {
@@ -76,7 +76,7 @@ const Survey = () => {
     const getCommonProps = {
       onChange,
       value: fieldValue,
-      label: title,
+      label: `${title} ${!required ? ' (Neprivalomas) ' : ''}`,
       bottomLabel: hint,
     };
     const geSelectProps = {
