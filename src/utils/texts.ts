@@ -29,7 +29,7 @@ export const inputLabels = {
   chooseOption: 'Pasirinkite',
   pressToWant: 'Paspauskite norėdami',
   uploadOrDragFilesHere: 'įkelti arba įtempkite failus čia',
-  fileTypesAndMaxSize: 'PDF, PNG, JPEG, JPG (maks. 2MB)',
+  fileTypesAndMaxSize: 'PDF, PNG, JPEG, JPG, MP4, AVI, MOV, DOC, DOCX (maks. 20MB)',
 };
 
 export const validationTexts = {
