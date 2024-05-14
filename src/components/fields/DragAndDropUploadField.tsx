@@ -22,9 +22,17 @@ export interface FileFieldProps {
   multiple?: boolean;
 }
 
-export const availableMimeTypes = ['image/png', 'image/jpg', 'image/jpeg', 'application/pdf'];
-
-const availableExtensionsTypes = ['.png', '.jpg', '.jpeg', '.pdf'];
+export const availableMimeTypes = [
+  'image/png',
+  'image/jpg',
+  'image/jpeg',
+  'application/pdf',
+  'video/mp4',
+  'video/x-msvideo',
+  'video/quicktime',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+];
 
 const bytesToMb = (bytes: number) => {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -36,7 +44,7 @@ const bytesToMb = (bytes: number) => {
 };
 
 const validateFileSizes = (files: File[]) => {
-  const maxSize = 2;
+  const maxSize = 20;
   for (let i = 0; i < files.length; i++) {
     const fileSizeToMb = files[i].size / 1024 / 1024;
     if (fileSizeToMb > maxSize) {
@@ -127,7 +135,7 @@ const DragAndDropUploadField = ({
             <Input
               ref={inputRef}
               type="file"
-              accept={availableExtensionsTypes.join(', ')}
+              accept={availableMimeTypes.join(', ')}
               multiple={multiple}
               onChange={handleChange}
             />
