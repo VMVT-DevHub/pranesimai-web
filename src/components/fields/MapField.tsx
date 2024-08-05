@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FeatureCollection } from '../../types';
 import FieldWrapper from './components/FieldWrapper';
 
-const mapsHost = import.meta.env.VITE_MAPS_HOST || 'https://maps.biip.lt';
+const mapsHost = 'https://maps.biip.lt';
 
 const MapField = ({
   value,
@@ -42,7 +42,7 @@ const MapField = ({
   return (
     <FieldWrapper label={label}>
       <Iframe
-        src={`${mapsHost}/edit?types[]=point`}
+        src={`${mapsHost}/edit?types[]=point&closeOnSearch=1`}
         ref={iframeRef}
         width={'100%'}
         allowFullScreen={true}
