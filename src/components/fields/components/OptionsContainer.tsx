@@ -27,7 +27,7 @@ const OptionsContainer = ({
   loading,
   observerRef,
 }: OptionsContainerProps) => {
-  const display = showSelect && !disabled;
+  const display = showSelect;
 
   const renderOptions = () => {
     if (!values?.length)
@@ -43,7 +43,9 @@ const OptionsContainer = ({
           return (
             <Option
               key={JSON.stringify(option)}
+              disabled={disabled}
               onClick={() => {
+                if (disabled) return;
                 handleClick(option);
               }}
             >
@@ -90,11 +92,12 @@ const OptionContainer = styled.div<{ display: boolean }>`
   }
 `;
 
-const Option = styled.div`
-  cursor: pointer;
+const Option = styled.div<{ disabled?: boolean }>`
   font-size: 1.6rem;
   line-height: 20px;
   padding: 8px 12px;
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   &:hover {
     background: #f3f3f7 0% 0% no-repeat padding-box;
   }

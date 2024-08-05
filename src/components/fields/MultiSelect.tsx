@@ -51,20 +51,18 @@ const MultiSelect = ({
   } = useSelectData({
     options,
     disabled,
-    onChange: (option: any) => {
-      if(value.length <= (maxSelectedValues - 1)) {
-        return onChange([...value, option])
-      } else {
-        const lastValues = value.slice((-maxSelectedValues + 1));
-        return onChange([...lastValues, option])
-      }
-      
-    },
+    onChange: (option: any) => onChange([...value, option]),
     getOptionLabel,
   });
 
   return (
-    <FieldWrapper onClick={handleToggleSelect} label={label} error={error} handleBlur={handleBlur}>
+    <FieldWrapper
+      onClick={handleToggleSelect}
+      label={label}
+      error={error}
+      handleBlur={handleBlur}
+      bottomLabel={`Galima pasirinkti iki ${maxSelectedValues} variantų`}
+    >
       <MultiTextField
         values={value}
         input={input}
@@ -79,6 +77,7 @@ const MultiSelect = ({
       <OptionsContainer
         values={filterSelectedOptions(suggestions, value, getOptionValue)}
         getOptionLabel={getOptionLabel}
+        disabled={value.length >= maxSelectedValues}
         showSelect={showSelect}
         handleClick={handleClick}
       />
