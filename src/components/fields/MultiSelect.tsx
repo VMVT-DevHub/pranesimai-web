@@ -26,6 +26,7 @@ export interface SelectFieldProps {
   getOptionLabel?: (option: any) => string;
   getOptionValue?: (option: any) => any;
   isSearchable?: boolean;
+  maxSelectedValues?: number;
 }
 
 const MultiSelect = ({
@@ -37,6 +38,7 @@ const MultiSelect = ({
   disabled = false,
   getOptionLabel = (option) => option.label,
   getOptionValue = (option) => option.id,
+  maxSelectedValues = 5,
 }: SelectFieldProps) => {
   const {
     suggestions,
@@ -49,7 +51,15 @@ const MultiSelect = ({
   } = useSelectData({
     options,
     disabled,
-    onChange: (option: any) => onChange([...value, option]),
+    onChange: (option: any) => {
+      if(value.length <= (maxSelectedValues - 1)) {
+        return onChange([...value, option])
+      } else {
+        const lastValues = value.slice((-maxSelectedValues + 1));
+        return onChange([...lastValues, option])
+      }
+      
+    },
     getOptionLabel,
   });
 
