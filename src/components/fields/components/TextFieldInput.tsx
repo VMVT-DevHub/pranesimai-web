@@ -15,6 +15,7 @@ export interface TextFieldProps {
   inputMode?: any;
   selectedValue?: boolean;
   onFocus?: any;
+  maxLength?: number;
 }
 
 const TextFieldInput = ({
@@ -33,6 +34,7 @@ const TextFieldInput = ({
   onInputClick,
   inputMode = 'text',
   onFocus = () => {},
+  maxLength = 255,
   ...rest
 }: TextFieldProps) => {
   return (
@@ -51,6 +53,7 @@ const TextFieldInput = ({
         disabled={disabled}
         onFocus={onFocus}
         inputMode={inputMode}
+        maxLength={maxLength}
         {...rest}
       />
       {rightIcon}
