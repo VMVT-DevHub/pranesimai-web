@@ -178,9 +178,9 @@ class Api {
 
       return data?.map((file) => {
         return {
+          id: file.id,
           name: file.filename,
           size: file.size,
-          url: file?.url,
         };
       });
     } catch (e: any) {
