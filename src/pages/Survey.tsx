@@ -66,8 +66,10 @@ const Survey = () => {
     onChange,
     values,
   ) => {
-    const { condition, title, hint, options, required } = currentQuestion;
+    const { condition, title, hint, options, required, spField } = currentQuestion;
     const fieldValue = values?.[currentQuestion.id];
+
+    const maxSelectedValues = (spField && Number(spField.split('')[spField.length - 1])) || 5;
 
     if (handleIsHiddenField(conditionQuestions, condition)) {
       return <></>;
@@ -106,6 +108,7 @@ const Survey = () => {
             {...geSelectProps}
             value={options.filter((option) => fieldValue?.includes(option.id))}
             onChange={(values) => onChange(values.map((value) => value.id))}
+            maxSelectedValues={maxSelectedValues}
           />
         );
       case QuestionType.INPUT:
@@ -156,8 +159,7 @@ const Survey = () => {
   const submitResponseMutation = useMutation({
     mutationFn: (params: { [key: string]: any }) => api.submitResponse(pageId, { values: params }),
     onSuccess: (data) => {
-      const nav = !!data?.nextResponse ? { search: `pageId=${data.nextResponse}` } : slugs.end;
-
+      const nav = data?.nextResponse ? { search: `pageId=${data.nextResponse}` } : slugs.end;
       return navigate(nav);
     },
   });
@@ -166,9 +168,9 @@ const Survey = () => {
     submitResponseMutation.mutateAsync(values);
   };
 
-  if (isLoading || !currentResponse?.page) return <FullscreenLoader />;
+  if (isLoading || !currentResponse) return <FullscreenLoader />;
 
-  const { title, description } = currentResponse?.page;
+  const { title, description } = currentResponse?.page || {};
   const questions = currentResponse?.questions || [];
   const showBackButton = !!currentResponse?.previousResponse;
 
