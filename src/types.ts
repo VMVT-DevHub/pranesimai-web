@@ -17,6 +17,7 @@ export interface Survey extends CommonFields {
 export interface Question extends CommonFields {
   required: boolean;
   riskEvaluation: boolean;
+  spField: string;
   type: QuestionType;
   title: string;
   description: string;

@@ -1,7 +1,7 @@
 export const titles = {
   surveyType: 'Pranešimo tipas',
   authenticated: 'Autentifikuosiu save per  e. valdžios vartus',
-  anonym: 'Anonimiškai',
+  anonym: 'Nesutinku identifikuotis',
   report: 'Kokiu būdu pranešite?',
   end: 'Dėkojame',
 };
@@ -11,7 +11,7 @@ export const descriptions = {
   authenticated:
     'Jūsų pranešimas bus nagrinėjamas ir informuosime apie įvykio nagrinėjimo eigą ir priimtus sprendimus elektroniniu paštu.',
   anonym:
-    'Jūsų pranešimas bus nagrinėjamas, tačiau Jūs nebūsite informuotas apie įvykio nagrinėjimo eigą ir priimtus sprendimus.',
+    'Jūsų pranešimas gali būti nagrinėjamas, tačiau Jūs nebūsite informuotas apie įvykio nagrinėjimo eigą ir/ar priimtus sprendimus.',
   chooseSubmitType: 'Pasirinkite kaip pateiksite pranešimą',
   end: 'Jūsų informacija sėkmingai pateikta',
 };
