@@ -181,8 +181,12 @@ const DateField = ({
               if (minDate && date < new Date(minDate)) {
                 return onChange(new Date(minDate));
               }
+              const year = date.getFullYear();
+              const month = date.getMonth();
+              const day = date.getDate();
+              const utcDate = new Date(Date.UTC(year, month, day));
 
-              onChange(date);
+              onChange(utcDate);
               setOpen(false);
             }}
             inline
