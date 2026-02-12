@@ -112,7 +112,7 @@ const Survey = () => {
           />
         );
       case QuestionType.INPUT:
-        return <TextField {...getCommonProps} />;
+        return <TextField {...getCommonProps} placeholder={hint} />;
       case QuestionType.EMAIL:
         return <TextField {...getCommonProps} type="email" />;
       case QuestionType.TEXT:
@@ -188,7 +188,19 @@ const Survey = () => {
     if (required) return true;
   };
 
-  const isDisabledSubmit = submitResponseMutation.isPending || questions.some(handleIsRequired);
+  const handleIsPhone = (question: Question) => {
+    const { id, hint } = question;
+    if (hint !== '+37000000000') return false;
+
+    const ltPhoneRegex = /^(?:\+370|0)6\d{7}$/;
+    if (!ltPhoneRegex.test(values[id])) return true;
+    else return false;
+  };
+
+  const isDisabledSubmit =
+    submitResponseMutation.isPending ||
+    questions.some(handleIsRequired) ||
+    questions.some(handleIsPhone);
 
   return (
     <Default
