@@ -46,7 +46,6 @@ const DateField = ({
   const [inputValue, setInputValue] = useState('');
   const [isVisible, setIsVisible] = useState(true);
   const invisibleDivRef = useRef(null);
-  maxDate = maxDate ? maxDate : new Date();
 
   useEffect(() => {
     const checkVisibility = (entries) => {
