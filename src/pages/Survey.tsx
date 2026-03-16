@@ -80,6 +80,7 @@ const Survey = () => {
       value: fieldValue,
       label: `${title} ${!required ? ' (Neprivalomas) ' : ''}`,
       bottomLabel: hint,
+      spField: spField,
     };
     const geSelectProps = {
       ...getCommonProps,
