@@ -262,9 +262,46 @@ const AddressPicker = ({
             </SelectWrapper>
           </Column>
 
+          {/* Adresas */}
+          <Column>
+            <SubLabel>Adresas</SubLabel>
+            <SelectWrapper>
+              <InputClickArea
+                onClick={() => {
+                  if (!disabled && current.gyvId) setOpenAdr(true);
+                }}
+              >
+                <TextFieldInput
+                  value={adrSearch}
+                  onChange={(t) => {
+                    setAdrSearch(t);
+                    setOpenAdr(true);
+                  }}
+                  placeholder="Įrašykite adresą (namo nr.)"
+                  error={undefined}
+                  leftIcon={undefined}
+                  rightIcon={<StyledIcon name={IconName.dropdownArrow} />}
+                  disabled={disabled || !current.gyvId}
+                />
+              </InputClickArea>
+
+              <OptionsContainer
+                loading={adrLoading}
+                values={openAdr ? adrOptions : []}
+                getOptionLabel={(label: string) => label}
+                showSelect={openAdr && (!!adrOptions.length || !!current.gyvId)}
+                handleClick={(label: string) => {
+                  const item = adrList.find((i) => formatAltLabel(i) === label);
+                  if (item) handleAdrSelect(item);
+                }}
+                isAddress
+              />
+            </SelectWrapper>
+          </Column>
+
           {/* Gatvė */}
           <Column>
-            <SubLabel>Gatvė (Neprivalomas)</SubLabel>
+            <SubLabel>Gatvė, jei nėra namo numerio (Neprivalomas)</SubLabel>
             <SelectWrapper>
               <InputClickArea
                 onClick={() => {
@@ -304,43 +341,6 @@ const AddressPicker = ({
                 handleClick={(label: string) => {
                   const item = gatList.find((i) => formatAltLabel(i) === label);
                   if (item) handleGatSelect(item);
-                }}
-                isAddress
-              />
-            </SelectWrapper>
-          </Column>
-
-          {/* Adresas */}
-          <Column>
-            <SubLabel>Adresas</SubLabel>
-            <SelectWrapper>
-              <InputClickArea
-                onClick={() => {
-                  if (!disabled && current.gyvId) setOpenAdr(true);
-                }}
-              >
-                <TextFieldInput
-                  value={adrSearch}
-                  onChange={(t) => {
-                    setAdrSearch(t);
-                    setOpenAdr(true);
-                  }}
-                  placeholder="Įrašykite adresą (namo nr.)"
-                  error={undefined}
-                  leftIcon={undefined}
-                  rightIcon={<StyledIcon name={IconName.dropdownArrow} />}
-                  disabled={disabled || !current.gyvId}
-                />
-              </InputClickArea>
-
-              <OptionsContainer
-                loading={adrLoading}
-                values={openAdr ? adrOptions : []}
-                getOptionLabel={(label: string) => label}
-                showSelect={openAdr && (!!adrOptions.length || !!current.gyvId)}
-                handleClick={(label: string) => {
-                  const item = adrList.find((i) => formatAltLabel(i) === label);
-                  if (item) handleAdrSelect(item);
                 }}
                 isAddress
               />
