@@ -21,7 +21,8 @@ const AuthTypeSelection = () => {
     queryFn: () => api.getAllSurveys(),
   });
   const survey = surveys?.find((item) => item.id === Number(surveyId));
-  const showAnonymousOption = survey?.authType === AuthTypes.OPTIONAL;
+  const showAnonymousOption =
+    survey?.authType === AuthTypes.OPTIONAL && survey?.anonymousAuthAvailable !== false;
 
   useEffect(() => {
     if (survey && !showAnonymousOption) {
