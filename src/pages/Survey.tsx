@@ -193,7 +193,7 @@ const Survey = () => {
     const { id, hint } = question;
     if (hint !== '+37000000000') return false;
 
-    const ltPhoneRegex = /^(?:\+370|0)6\d{7}$/;
+    const ltPhoneRegex = /^(?:\+370|0)\d{8}$/;
     if (!ltPhoneRegex.test(values[id])) return true;
     else return false;
   };
