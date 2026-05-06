@@ -19,7 +19,8 @@ import Default from '../layouts/Default';
 import { device } from '../styles';
 import { Option, Question } from '../types';
 import { ButtonColors, buttonLabels, isEmpty, QuestionType, slugs } from '../utils';
-import api from '../utils/api';
+import { api } from '../utils/api';
+import AddressPicker, { AddressValue } from '../components/fields/AddressPicker';
 
 const Survey = () => {
   const [searchParams] = useSearchParams();
@@ -61,17 +62,16 @@ const Survey = () => {
   };
 
   const renderField = (
-    conditionQuestions: Question,
+    conditionQuestions: Record<number, Question>,
     currentQuestion: Question,
     onChange,
     values,
   ) => {
     const { condition, title, hint, options, required, spField } = currentQuestion;
     const fieldValue = values?.[currentQuestion.id];
-
     const maxSelectedValues = (spField && Number(spField.split('')[spField.length - 1])) || 5;
 
-    if (handleIsHiddenField(conditionQuestions, condition)) {
+    if (condition && handleIsHiddenField(conditionQuestions[condition.question], condition)) {
       return <></>;
     }
 
@@ -151,7 +151,14 @@ const Survey = () => {
             onDelete={(files: any) => onChange(files)}
           />
         );
-
+      case QuestionType.ADDRESS:
+        return (
+          <AddressPicker
+            {...getCommonProps}
+            value={fieldValue as AddressValue | undefined}
+            onChange={(addr: AddressValue) => onChange(addr)}
+          />
+        );
       default:
         return null;
     }
@@ -169,9 +176,10 @@ const Survey = () => {
     submitResponseMutation.mutateAsync(values);
   };
 
-  if (isLoading || !currentResponse) return <FullscreenLoader />;
+  if (isLoading || !currentResponse?.page) return <FullscreenLoader />;
 
-  const { title, description } = currentResponse?.page || {};
+  // eslint-disable-next-line no-unsafe-optional-chaining
+  const { title, description } = currentResponse?.page;
   const questions = currentResponse?.questions || [];
   const showBackButton = !!currentResponse?.previousResponse;
 
@@ -180,11 +188,19 @@ const Survey = () => {
   const mappedQuestionsByIds = questions.reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
 
   const handleIsRequired = (question: Question) => {
-    const { condition, required, id } = question;
+    const { condition, required, id, type } = question;
+    const v = values[id];
 
-    if (!isEmpty(values[id])) return false;
+    if (type === QuestionType.ADDRESS) {
+      const addr = v as AddressValue | undefined;
+      const isEmptyAddress = !addr || !addr.gyvId;
+      if (!isEmptyAddress) return false;
+    } else {
+      if (!isEmpty(v)) return false;
+    }
 
-    if (handleIsHiddenField(mappedQuestionsByIds[condition?.question], condition)) return false;
+    if (condition && handleIsHiddenField(mappedQuestionsByIds[condition.question], condition))
+      return false;
 
     if (required) return true;
   };
@@ -214,7 +230,7 @@ const Survey = () => {
       <Container>
         {questions?.map((question) =>
           renderField(
-            mappedQuestionsByIds[question?.condition?.question],
+            mappedQuestionsByIds,
             question,
             (value) => setValues({ ...values, [question.id]: value }),
             values,
