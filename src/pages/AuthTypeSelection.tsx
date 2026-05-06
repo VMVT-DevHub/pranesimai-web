@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Button from '../components/buttons/Button';
 import InfoCard from '../components/cards/InfoCard';
 import Icon from '../components/other/Icons';
 import Default from '../layouts/Default';
-import { buttonLabels, descriptions, IconName, titles } from '../utils';
+import { buttonLabels, descriptions, IconName, titles, AuthTypes } from '../utils';
+import { api } from '../utils/api';
 
 const AuthTypeSelection = () => {
   const [selectedSurveyAuthType, setSelectedSurveyAuthType] = useState<boolean | undefined>(
@@ -14,6 +16,19 @@ const AuthTypeSelection = () => {
   const [searchParams] = useSearchParams();
   const surveyId = searchParams.get('surveyId') || '';
   const [buttonLoading, setButtonLoading] = useState(false);
+  const { data: surveys } = useQuery({
+    queryKey: ['surveys'],
+    queryFn: () => api.getAllSurveys(),
+  });
+  const survey = surveys?.find((item) => item.id === Number(surveyId));
+  const showAnonymousOption = survey?.authType === AuthTypes.OPTIONAL;
+
+  useEffect(() => {
+    if (survey && !showAnonymousOption) {
+      setSelectedSurveyAuthType(true);
+    }
+  }, [showAnonymousOption, survey]);
+
   const info = [
     {
       title: titles.anonym,
@@ -27,7 +42,7 @@ const AuthTypeSelection = () => {
       icon: <Icon name={IconName.user} />,
       value: true,
     },
-  ];
+  ].filter((item) => showAnonymousOption || item.value);
 
   return (
     <Default title={titles.surveyType} description={descriptions.surveyType}>
