@@ -12,6 +12,7 @@ export enum QuestionType {
   AUTH = 'AUTH',
   SELECT = 'SELECT',
   RADIO = 'RADIO',
+  ADDRESS = 'ADDRESS',
   MULTISELECT = 'MULTISELECT',
   CHECKBOX = 'CHECKBOX',
   EMAIL = 'EMAIL',

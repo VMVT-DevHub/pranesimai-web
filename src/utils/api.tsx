@@ -47,6 +47,13 @@ interface Create {
   id?: string;
 }
 
+export interface AddressSearchItem {
+  id: number;
+  pavad: string;
+  vietove: string;
+  tipas: string;
+}
+
 export enum Resources {
   SURVEYS = 'surveys',
   START_SURVEY = 'sessions/start',
@@ -204,8 +211,42 @@ class Api {
       params,
     });
   };
+
+  // ---------------------------------------------------------------------------
+  // ADDRESS SEARCH ENDPOINTS (via /addresses service)
+  // ---------------------------------------------------------------------------
+
+  findGyv = async (query: string): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/addresses/find/gyv', {
+        params: { q: query, top: 10 },
+      }),
+    );
+  };
+
+  findAdr = async (gyvId: number, query: string, gatId?: number): Promise<AddressSearchItem[]> => {
+    const params: any = {
+      gyv: gyvId,
+      q: query,
+      top: 10,
+    };
+
+    if (gatId != null) {
+      params.gat = gatId;
+    }
+
+    return this.errorWrapper(() => this.AuthApiAxios.get('/addresses/find/adr', { params }));
+  };
+
+  searchGat = async (gyvId: number, query: string): Promise<AddressSearchItem[]> => {
+    return this.errorWrapper(() =>
+      this.AuthApiAxios.get('/addresses/search/gat', {
+        params: { gyv: gyvId, q: query, top: 10 },
+      }),
+    );
+  };
 }
 
 const api = new Api();
 
-export default api;
+export { api };
