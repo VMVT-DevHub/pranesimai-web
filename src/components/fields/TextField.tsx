@@ -49,7 +49,7 @@ const TextField = ({
   const [errorMessage, setErrorMessage] = useState('');
   const handleBlur = () => {
     if (placeholder == '+37000000000') {
-      const ltPhoneRegex = /^(?:\+370|0)6\d{7}$/;
+      const ltPhoneRegex = /^(?:\+370|0)\d{8}$/;
       if (value && !ltPhoneRegex.test(value.toString()))
         setErrorMessage('Netinkamas telefono numerio formatas.');
       else setErrorMessage('');
