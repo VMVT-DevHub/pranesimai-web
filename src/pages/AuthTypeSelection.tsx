@@ -79,8 +79,10 @@ const AuthTypeSelection = () => {
 
 const ContentContainer = styled.div`
   display: grid;
+  justify-content: center;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 32px;
+  width: 100%;
 `;
 
 const Container = styled.div`
@@ -88,6 +90,7 @@ const Container = styled.div`
   grid-template-columns: 1;
   align-items: center;
   gap: 32px;
+  width: 100%;
 `;
 
 const ButtonContainer = styled.div`
