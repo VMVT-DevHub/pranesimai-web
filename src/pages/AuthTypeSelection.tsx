@@ -51,7 +51,7 @@ const AuthTypeSelection = () => {
         <input type="hidden" name="survey" value={surveyId} />
         <input type="hidden" name="auth" value={`${selectedSurveyAuthType}`} />
         <Container>
-          <ContentContainer>
+          <ContentContainer $isSingle={info.length === 1}>
             {info?.map((item) => (
               <InfoCard
                 key={item.title}
@@ -77,10 +77,11 @@ const AuthTypeSelection = () => {
   );
 };
 
-const ContentContainer = styled.div`
+const ContentContainer = styled.div<{ $isSingle: boolean }>`
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: ${({ $isSingle }) =>
+    $isSingle ? 'minmax(250px, 420px)' : 'repeat(auto-fill, minmax(250px, 1fr))'};
   gap: 32px;
   width: 100%;
 `;
