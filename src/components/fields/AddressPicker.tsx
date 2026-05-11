@@ -57,11 +57,28 @@ const AddressPicker = ({
   const [gatSearch, setGatSearch] = useState('');
   const [adrSearch, setAdrSearch] = useState('');
 
+  const [debouncedGyvSearch, setDebouncedGyvSearch] = useState('');
+  const [debouncedGatSearch, setDebouncedGatSearch] = useState('');
+  const [debouncedAdrSearch, setDebouncedAdrSearch] = useState('');
+
   const [openGyv, setOpenGyv] = useState(false);
   const [openGat, setOpenGat] = useState(false);
   const [openAdr, setOpenAdr] = useState(false);
 
-  console.log(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedGyvSearch(gyvSearch), 300);
+    return () => clearTimeout(timer);
+  }, [gyvSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedGatSearch(gatSearch), 300);
+    return () => clearTimeout(timer);
+  }, [gatSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedAdrSearch(adrSearch), 300);
+    return () => clearTimeout(timer);
+  }, [adrSearch]);
 
   useEffect(() => {
     if (!value) {
@@ -93,9 +110,9 @@ const AddressPicker = ({
   const hasMinGyvChars = gyvSearch.trim().length >= 2;
 
   const { data: gyvList = [], isLoading: gyvLoading } = useQuery({
-    queryKey: ['addrFindGyv', gyvSearch],
-    enabled: hasMinGyvChars,
-    queryFn: () => api.findGyv(gyvSearch.trim()),
+    queryKey: ['addrFindGyv', debouncedGyvSearch], // <-- debounced
+    enabled: debouncedGyvSearch.trim().length >= 2,
+    queryFn: () => api.findGyv(debouncedGyvSearch.trim()),
     retry: false,
   });
 
@@ -131,9 +148,9 @@ const AddressPicker = ({
   // ----------------- GAT (gatvė) -----------------
 
   const { data: gatList = [], isLoading: gatLoading } = useQuery({
-    queryKey: ['addrFindGat', current.gyvId, gatSearch],
+    queryKey: ['addrFindGat', current.gyvId, debouncedGatSearch], // <-- debounced
     enabled: !!current.gyvId,
-    queryFn: () => api.searchGat(current.gyvId!, gatSearch.trim()),
+    queryFn: () => api.searchGat(current.gyvId!, debouncedGatSearch.trim()),
     retry: false,
   });
 
@@ -163,9 +180,10 @@ const AddressPicker = ({
 
   // ----------------- ADR (pilnas adresas) -----------------
   const { data: adrList = [], isLoading: adrLoading } = useQuery({
-    queryKey: ['addrFindAdr', current.gyvId, current.gatId, adrSearch],
+    queryKey: ['addrFindAdr', current.gyvId, current.gatId, debouncedAdrSearch], // <-- debounced
     enabled: !!current.gyvId,
-    queryFn: () => api.findAdr(current.gyvId!, adrSearch.trim(), current.gatId || undefined),
+    queryFn: () =>
+      api.findAdr(current.gyvId!, debouncedAdrSearch.trim(), current.gatId || undefined),
     retry: false,
   });
 
